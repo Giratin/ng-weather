@@ -36,9 +36,7 @@ export class CurrentConditionsComponent implements OnInit, OnDestroy {
     this.subscription = interval(INTERVAL)
       .subscribe(data => {
         this.weatherService.refreshData(this.locationService.locations);
-        this.currentConditions = this.getCurrentConditions();
-        console.log(this.currentConditions);
-        
+        this.currentConditions = this.getCurrentConditions();        
       });
   }
 
