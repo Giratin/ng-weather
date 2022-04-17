@@ -1,0 +1,9 @@
+
+<div class="autocomplete">
+    <input type="search" id="inputFilter" 
+        class="form-control" placeholder="Enter country name"
+        (keyup)="onKeyPressed($event)" [(ngModel)]="countrySearch" 
+        name="search" (focus)="onFocus($event)"
+        />
+        <div #myInputautocomplete  class="autocomplete-items"></div>   
+</div>

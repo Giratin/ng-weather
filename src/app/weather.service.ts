@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class WeatherService {
@@ -11,18 +11,32 @@ export class WeatherService {
   static ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
   private currentConditions = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  addCurrentConditions(zipcode: string): void {
+  addCurrentConditions(zipcode: string, countryId?: string): void {
     // Here we make a request to get the curretn conditions data from the API. Note the use of backticks and an expression to insert the zipcode
-    this.http.get(`${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`)
-      .subscribe(data => this.currentConditions.push({zip: zipcode, data: data}) );
+    this.http.get(`${WeatherService.URL}/weather?zip=${zipcode},${countryId ? countryId: 'us'}&units=imperial&APPID=${WeatherService.APPID}`)
+      .subscribe(data => this.currentConditions.push({ zip: zipcode, data: data }), err=>{});
   }
 
   removeCurrentConditions(zipcode: string) {
-    for (let i in this.currentConditions){
+    for (let i in this.currentConditions) {
       if (this.currentConditions[i].zip == zipcode)
         this.currentConditions.splice(+i, 1);
+    }
+  }
+
+  refreshData(zipcodes: Array<string>): void {
+    for (let zipcode of zipcodes) {
+      this.http.get(`${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`)
+        .subscribe(data => {
+          this.currentConditions = this.currentConditions.filter((condition) => {
+            if (condition.zip == zipcode) {
+              condition = { zip: zipcode, data: data }
+            }
+            return true;
+          });
+        },err=>{});
     }
   }
 
@@ -36,7 +50,7 @@ export class WeatherService {
 
   }
 
-  getWeatherIcon(id){
+  getWeatherIcon(id) {
     if (id >= 200 && id <= 232)
       return WeatherService.ICON_URL + "art_storm.png";
     else if (id >= 501 && id <= 511)

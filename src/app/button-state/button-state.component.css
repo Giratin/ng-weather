@@ -1,0 +1,71 @@
+.btn-multiple-state.btn-primary {
+    cursor: pointer;
+}
+.btn-multiple-state .spinner,
+.btn-multiple-state .icon {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+    top: 50%;
+    transition: opacity 500ms;
+    color: #fff;
+    pointer-events: none;
+}
+.btn-multiple-state .spinner {
+    min-width: 36px;
+    text-align: center;
+}
+.btn-multiple-state.show-spinner .spinner {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+}
+
+.btn-multiple-state.show-icon .icon {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+}
+
+.btn-multiple-state .spinner > div {
+    width: 6px;
+    height: 6px;
+    background-color: #fff;
+    border-radius: 100%;
+    display: inline-block;
+    animation: sk-bouncedelay 1.2s infinite ease-in-out both;
+}
+.btn-multiple-state .spinner .bounce1 {
+    animation-delay: -0.32s;
+}
+.btn-multiple-state .spinner .bounce2 {
+    animation-delay: -0.16s;
+}
+.btn-multiple-state .label {
+    transition: opacity 500ms;
+    transition: display 500ms;
+}
+.btn-multiple-state.show-spinner .label {
+    opacity: 0;
+    display: none;
+}
+.btn-multiple-state.show-icon .label {
+    opacity: 0;
+    display: none;
+}
+
+@keyframes sk-bouncedelay {
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    40% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+}
