@@ -4,7 +4,7 @@ import { LocationService } from "../location.service";
 import { Router } from "@angular/router";
 import { interval, Subscription } from 'rxjs';
 
-const INTERVAL = 30000;
+const INTERVAL = 3000;
 
 @Component({
   selector: 'app-current-conditions',
@@ -37,6 +37,8 @@ export class CurrentConditionsComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.weatherService.refreshData(this.locationService.locations);
         this.currentConditions = this.getCurrentConditions();
+        console.log(this.currentConditions);
+        
       });
   }
 

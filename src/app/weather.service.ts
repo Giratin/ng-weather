@@ -26,13 +26,13 @@ export class WeatherService {
     }
   }
 
-  refreshData(zipcodes: Array<string>): void {
-    for (let zipcode of zipcodes) {
-      this.http.get(`${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`)
+  refreshData(coutryLists: Array<string>): void {
+    for (let countryDetails of coutryLists) {      
+      this.http.get(`${WeatherService.URL}/weather?zip=${countryDetails["zipcode"]},${countryDetails["id"]}&units=imperial&APPID=${WeatherService.APPID}`)
         .subscribe(data => {
           this.currentConditions = this.currentConditions.filter((condition) => {
-            if (condition.zip == zipcode) {
-              condition = { zip: zipcode, data: data }
+            if (condition.zip == countryDetails["zipcode"]) {
+              condition = { zip: countryDetails["zipcode"], data: data }
             }
             return true;
           });
