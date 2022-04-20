@@ -3,8 +3,9 @@ import { WeatherService } from "../weather.service";
 import { LocationService } from "../location.service";
 import { Router } from "@angular/router";
 import { interval, Subscription } from 'rxjs';
+import { ButtonService } from 'app/button.service';
 
-const INTERVAL = 3000;
+const INTERVAL = 30000;
 
 @Component({
   selector: 'app-current-conditions',
@@ -16,7 +17,8 @@ export class CurrentConditionsComponent implements OnInit, OnDestroy {
   constructor(
     private weatherService: WeatherService,
     private locationService: LocationService,
-    private router: Router
+    private router: Router,
+    private buttonService: ButtonService
   ) {
   }
   ngOnDestroy(): void {
@@ -26,9 +28,15 @@ export class CurrentConditionsComponent implements OnInit, OnDestroy {
   }
   currentConditions = [];
   subscription: Subscription = new Subscription();
+  newLocationAddedSubscription: Subscription = new Subscription();
 
   ngOnInit(): void {
     this.currentConditions = this.getCurrentConditions();
+    this.newLocationAddedSubscription = this.buttonService.buttonSubject.subscribe((value)=>{
+      if(value == 'done'){
+        this.currentConditions = this.getCurrentConditions();
+      }
+    })
     this.refreshData();
   }
 

@@ -1,7 +1,6 @@
-import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, HostListener, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component} from '@angular/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
-import { interval, timer } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +8,5 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
-
   constructor() { }
 }

@@ -1,9 +1,12 @@
-
 <div class="autocomplete">
-    <input type="search" id="inputFilter" 
-        class="form-control" placeholder="Enter country name"
-        (keyup)="onKeyPressed($event)" [(ngModel)]="countrySearch" 
-        name="search" (focus)="onFocus($event)"
+    <input type="search"
+        class="form-control" #searchRef placeholder="Enter country name"
+        (keyup)="onKeyInputPressed(searchRef.value)" 
+        name="search" (focus)="onInputFocus()"
         />
-        <div #myInputautocomplete  class="autocomplete-items"></div>   
+        <div *ngIf="show" id="element" class="autocomplete-items">
+            <div *ngFor="let country of countryList" (click)="selectCountry(country)">
+                <span  [innerHtml]="country?.html || country.name"></span>
+            </div>
+        </div>   
 </div>

@@ -1,7 +1,7 @@
 
 
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,30 +11,31 @@ import { Subscription } from 'rxjs';
 })
 export class CountryFilterComponent implements OnInit, OnDestroy, OnChanges {
 
-    @ViewChild('myInputautocomplete', { static: false }) myInputautocomplete: ElementRef;
+    @ViewChild('searchRef') searchRef: ElementRef;
     @Output() onSelect: EventEmitter<any> = new EventEmitter();
     @Input() clear: boolean = false;
 
     constructor(
         private http: HttpClient,
-        private renderer: Renderer2
     ) { }
     
     ngOnChanges(changes: SimpleChanges): void {
        if(this.clear){
-           this.clearList();
-           this.countrySearch = "";
+           this.onListClear();
+           this.searchRef.nativeElement.value = "";
        }
     }
 
     subscription: Subscription = new Subscription();
-    countrySearch: string = "";
     countryList = [];
     countryJson = [];
+
+    show: boolean = false;
 
     ngOnInit(): void {
         this.subscription = this.http.get('/assets/countries.json').subscribe((countries) => {
             this.countryJson = countries as Array<any>;
+            this.countryList = this.countryJson;
         });
     }
 
@@ -44,43 +45,33 @@ export class CountryFilterComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    onKeyPressed(e) {
-        this.clearList();
-        this.countrySearch = this.countrySearch.trim();
-        if (this.countrySearch != "") {
-            for (var i = 0; i < this.countryJson.length; i++) {
-                if (this.countryJson[i]["name"].substr(0, this.countrySearch.length).toUpperCase() == this.countrySearch.toUpperCase()) {
-                    this.createCountryInput(this.countryJson[i]["code"], this.countrySearch.length, this.countryJson[i]["name"]);
-                }
+    onInputFocus(){
+        this.show = true;
+    }
+
+    onKeyInputPressed(value){
+        this.countryList = [];
+        for (var i = 0; i < this.countryJson.length; i++) {
+            if (this.countryJson[i]["name"].substr(0, value.length).toUpperCase() == value.toUpperCase()) {
+                this.setCountry(value.length, this.countryJson[i]);
             }
         }
     }
-    onFocus(e) {
-        for (var i = 0; i < this.countryJson.length; i++) {
-            this.createCountryInput(this.countryJson[i]["code"], 0, this.countryJson[i]["name"]);
-        }
+
+    setCountry(strLength, country){
+        let countryValue = `<strong>${country.name.substr(0, strLength)}</strong>${country.name.substr(strLength)}`         
+        this.countryList.push({ ...country, html: countryValue });
     }
 
-    createCountryInput(id, strLength, country) {
-        const element = this.renderer.createElement('div');
-        this.renderer.setProperty(element, 'id', id);
-        element.innerHTML = `<strong>${country.substr(0, strLength)}</strong>`;
-        element.innerHTML += country.substr(strLength);
-        element.innerHTML += `<input type='hidden' name='${id}' value='${country}' />`;
-
-        this.renderer.listen(element, 'click', (e: PointerEvent) => {
-            let item = this.myInputautocomplete.nativeElement.querySelector(`[name="${e.target["id"]}"]`) as HTMLInputElement;
-            this.onSelect.emit({ country: item.value, id: e.target["id"] });
-            this.countrySearch = item.value;
-            this.clearList();
-        })
-        this.renderer.appendChild(this.myInputautocomplete.nativeElement, element);
+    onListClear(){
+        this.show = false;
+        this.countryList = this.countryJson;
     }
 
-    clearList() {
-        Array.from(this.myInputautocomplete.nativeElement.children).forEach(child => {
-            this.renderer.removeChild(this.myInputautocomplete.nativeElement, child);
-        });
+    selectCountry(country){
+        this.onSelect.emit({ country: country.name, id: country.code });
+        this.searchRef.nativeElement.value = country.name;
+        this.onListClear();
     }
 
 }
