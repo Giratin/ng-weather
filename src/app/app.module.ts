@@ -14,9 +14,9 @@ import { routing } from "./app.routing";
 import { HttpClientModule } from "@angular/common/http";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { ButtonStateComponent } from './button-state/button-state.component';
 import { ButtonService } from './button.service';
 import { CountryFilterComponent } from './country-filter/country-filter.component';
+import { MultiStateButton } from './multi-state-button/multi-state-button.component';
 
 @NgModule({
   declarations: [
@@ -24,9 +24,9 @@ import { CountryFilterComponent } from './country-filter/country-filter.componen
     ZipcodeEntryComponent,
     ForecastsListComponent,
     CurrentConditionsComponent,
-    ButtonStateComponent,
     MainPageComponent,
-    CountryFilterComponent
+    CountryFilterComponent,
+    MultiStateButton
   ],
   imports: [
     BrowserModule,
